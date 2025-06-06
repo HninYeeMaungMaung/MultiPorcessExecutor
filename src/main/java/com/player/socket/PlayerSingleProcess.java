@@ -1,8 +1,6 @@
-package com.player;
+package com.player.socket;
 
-import java.util.Scanner;
-
-public class MainSingleProcess {
+public class PlayerSingleProcess {
     public static void main(String[] args) {
         sameProcessID();
         System.out.println("Launcher PID: " + ProcessHandle.current().pid());
@@ -10,21 +8,23 @@ public class MainSingleProcess {
 
     public static void sameProcessID(){
 
-        Player initiator = new Player("Initiator");
-        Player responder = new Player("Responder");
+        long pid = ProcessHandle.current().pid();
+
+        Player initiator = new Player("Initiator", pid);
+        Player responder = new Player("Responder", pid);
 
         int rounds = 0;
         final int MAX = 10;
 
-        String message = initiator.sendMessage();
+        String message = "Hello";
 
         while (rounds < MAX) {
 
             initiator.printPid();
             responder.printPid();
             
-            message = responder.receiveMessage(message);
-            message = initiator.receiveMessage(message);
+            message = responder.processMessage(message);
+            message = initiator.processMessage(message);
 
             rounds++;
             System.out.println();
